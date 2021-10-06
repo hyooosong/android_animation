@@ -2,48 +2,37 @@ package com.example.viewpageranim
 
 import android.view.View
 import androidx.viewpager2.widget.ViewPager2
+import java.lang.Math.abs
 
-class DepthPageTransformer : ViewPager2.PageTransformer {
+class DepthPageTransformer(private val offscreenPageLimit: Int) : ViewPager2.PageTransformer {
 
-    override fun transformPage(view: View, position: Float) {
-        view.apply {
-            val pageHeight = height
+    override fun transformPage(page: View, position: Float) {
+        page.apply {
+            val scaleFactor = (MIN_SCALE + (1 - MIN_SCALE) * (1 - abs(position)))
+
             when {
-                position < -1 -> { // [-Infinity,-1)
-                    // This page is way off-screen to the left.
-                    alpha = 0f
-                }
-                position <= 0 -> { // [-1,0]
-                    // Use the default slide transition when moving to the left page
-                    alpha = 1f
-                    translationY = 0f
-                    translationZ = 0f
-                    scaleX = 1f
-                    scaleY = 1f
-                }
-                position <= 1 -> { // (0,1]
-                    // Fade the page out.
-                    alpha = 1 - position
-
-                    // Counteract the default slide transition
-                    translationY = pageHeight * position
-                    // Move it behind the left page
-                    translationZ = -1f
-
-                    // Scale the page down (between MIN_SCALE and 1)
-                    val scaleFactor = (MIN_SCALE + (1 - MIN_SCALE) * (1 - Math.abs(position)))
+                position <= offscreenPageLimit - 1 -> {
                     scaleX = scaleFactor
                     scaleY = scaleFactor
+                    translationY = -(height / DEFAULT_TRANSLATION_FACTOR) * position
                 }
-                else -> { // (1,+Infinity]
-                    // This page is way off-screen to the right.
-                    alpha = 0f
+                else -> {
+                    translationY = DEFAULT_TRANSLATION_Y
+                    scaleX = DEFAULT_SCALE
+                    scaleY = DEFAULT_SCALE
                 }
             }
+            alpha = DEFAULT_ALPHA + position
         }
     }
 
     companion object {
-        private const val MIN_SCALE = 0.8f
+        private const val DEFAULT_TRANSLATION_Y = .0f
+        private const val DEFAULT_TRANSLATION_FACTOR = 1.1f
+
+        private const val DEFAULT_SCALE = 1f
+        private const val MIN_SCALE = 0.75f
+
+        private const val DEFAULT_ALPHA = 1f
     }
 }

@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         binding.viewPagerMain.apply {
             adapter = ScreenSlidePagerAdapter(this@MainActivity)
             offscreenPageLimit = 1
-            setPageTransformer(DepthPageTransformer())
+            setPageTransformer(DepthPageTransformer(1))
         }
     }
 

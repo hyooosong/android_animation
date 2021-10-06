@@ -10,7 +10,7 @@ import androidx.databinding.DataBindingUtil
 import com.example.viewpageranim.databinding.FragmentExBinding
 
 class ExFragment(private val position: Int) : Fragment() {
-    private lateinit var binding : FragmentExBinding
+    private lateinit var binding: FragmentExBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -21,11 +21,8 @@ class ExFragment(private val position: Int) : Fragment() {
     }
 
     private fun initViewPager() {
-        when(position) {
-            0 -> {
-                binding.view.setBackgroundColor(Color.parseColor("#f3aa12"))
-                binding.view.clipToOutline = true
-            }
+        when (position) {
+            0 -> binding.view.setBackgroundColor(Color.parseColor("#f3aa12"))
             1 -> binding.view.setBackgroundColor(Color.parseColor("#9ae2f2"))
             2 -> binding.view.setBackgroundColor(Color.parseColor("#b1ea22"))
         }
